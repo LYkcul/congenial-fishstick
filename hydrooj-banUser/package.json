@@ -1,0 +1,9 @@
+{
+  "name": "hydrooj-banUser",
+  "version": "1.0.0",
+  "description": "ban user",
+  "main": "index.ts",
+  "repository": "https://github.com/LYkcul/hydrooj-banUser",
+  "author": "LYkcul",
+  "license": "AGPL-3.0"
+}
