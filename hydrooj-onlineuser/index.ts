@@ -5,8 +5,7 @@ import {
 const token = db.collection('token');
 
 class OnlineUserHandler extends Handler {
-  async get(domainId: string) {
-    console.log(domainId);
+  async get({ domainId }) {
     const res = await token.aggregate([
       { $match: { updateAt: { $gte: new Date(Date.now() - 300 * 1000) }, uid: { $gt: 1 } } },
       { $group: { _id: '$uid' } },
@@ -14,12 +13,8 @@ class OnlineUserHandler extends Handler {
       { $project: { _id: '$_id' } },
       { $unwind: '$_id' },
     ]).toArray();
-    const udict = [];
-    for (const doc of res) {
-      const udoc = await UserModel.getById('system', doc._id);
-      udict.push(udoc);
-    }
-    this.response.body = { udict };
+    const udocs = await Promise.all(res.map((doc) => UserModel.getById(domainId, doc._id)));
+    this.response.body = { udocs };
     this.response.template = 'onlineuser.html';
   }
 }
